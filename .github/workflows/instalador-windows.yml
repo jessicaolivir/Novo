@@ -1,0 +1,46 @@
+name: Gerar instalador Windows
+
+on:
+  push:
+    branches: [main, claude/sistema-pdv-sif73d]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Gerar instalador
+        run: npm run dist:win
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Guardar instalador como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDV-Instalador-Windows
+          path: dist/*.exe
+          if-no-files-found: error
+
+      - name: Publicar na página de Releases
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete instalador-windows --yes --cleanup-tag || true
+          gh release create instalador-windows dist/*.exe \
+            --title "PDV - Instalador para Windows" \
+            --notes "Baixe o arquivo PDV-Instalador .exe abaixo, execute e siga as instruções. Gerado automaticamente a partir do commit ${GITHUB_SHA::7}." \
+            --target "$GITHUB_SHA"
