@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sistema PDV</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar no-print">
+      <div class="brand">
+        <span class="brand-logo">PDV</span>
+        <span class="brand-name" id="brandName">Minha Loja</span>
+      </div>
+      <nav>
+        <button class="nav-btn active" data-view="vendas">🛒 Vendas <kbd>F1</kbd></button>
+        <button class="nav-btn" data-view="produtos">📦 Produtos</button>
+        <button class="nav-btn" data-view="caixa">💰 Caixa</button>
+        <button class="nav-btn" data-view="relatorios">📊 Relatórios</button>
+        <button class="nav-btn" data-view="config">⚙️ Configurações</button>
+      </nav>
+      <div class="caixa-status" id="caixaStatus"></div>
+    </aside>
+
+    <main class="content no-print">
+      <!-- VENDAS -->
+      <section class="view active" id="view-vendas">
+        <div class="pdv-grid">
+          <div class="pdv-left">
+            <div class="card">
+              <form id="formAddItem" class="add-item" autocomplete="off">
+                <div class="field grow">
+                  <label for="inputBusca">Código de barras ou nome <kbd>F2</kbd> <small>(use 3*código para quantidade)</small></label>
+                  <input id="inputBusca" type="text" placeholder="Leia o código ou digite o nome do produto">
+                  <ul id="sugestoes" class="sugestoes hidden"></ul>
+                </div>
+                <div class="field qtd">
+                  <label for="inputQtd">Qtd</label>
+                  <input id="inputQtd" type="number" min="0.001" step="0.001" value="1">
+                </div>
+                <button type="submit" class="btn primary">Adicionar</button>
+              </form>
+            </div>
+            <div class="card carrinho">
+              <table class="table">
+                <thead>
+                  <tr><th>#</th><th>Produto</th><th class="r">Qtd</th><th class="r">Unitário</th><th class="r">Total</th><th></th></tr>
+                </thead>
+                <tbody id="carrinhoBody"></tbody>
+              </table>
+              <p class="empty" id="carrinhoVazio">Nenhum item na venda. Leia um código de barras para começar.</p>
+            </div>
+          </div>
+          <div class="pdv-right">
+            <div class="card totais">
+              <div class="linha"><span>Itens</span><strong id="totItens">0</strong></div>
+              <div class="linha"><span>Subtotal</span><strong id="totSubtotal">R$ 0,00</strong></div>
+              <div class="linha desconto">
+                <span>Desconto</span>
+                <div class="desc-input">
+                  <input id="inputDesconto" type="text" placeholder="0,00">
+                  <select id="tipoDesconto">
+                    <option value="valor">R$</option>
+                    <option value="perc">%</option>
+                  </select>
+                </div>
+              </div>
+              <div class="linha"><span>Desconto aplicado</span><strong id="totDesconto">R$ 0,00</strong></div>
+              <div class="total-geral">
+                <span>TOTAL</span>
+                <strong id="totTotal">R$ 0,00</strong>
+              </div>
+              <button class="btn success big" id="btnFinalizar">Finalizar venda <kbd>F4</kbd></button>
+              <button class="btn danger" id="btnCancelarVenda">Cancelar venda <kbd>F8</kbd></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUTOS -->
+      <section class="view" id="view-produtos">
+        <div class="toolbar">
+          <h2>Produtos</h2>
+          <input id="buscaProduto" type="search" placeholder="Buscar por nome, código ou categoria">
+          <button class="btn primary" id="btnNovoProduto">+ Novo produto</button>
+        </div>
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr><th>Código</th><th>Nome</th><th>Categoria</th><th class="r">Custo</th><th class="r">Preço</th><th class="r">Estoque</th><th>Un.</th><th></th></tr>
+            </thead>
+            <tbody id="produtosBody"></tbody>
+          </table>
+          <p class="empty hidden" id="produtosVazio">Nenhum produto encontrado.</p>
+        </div>
+      </section>
+
+      <!-- CAIXA -->
+      <section class="view" id="view-caixa">
+        <div class="toolbar"><h2>Caixa</h2></div>
+        <div id="caixaPainel"></div>
+        <h3>Histórico de caixas</h3>
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr><th>Nº</th><th>Abertura</th><th>Fechamento</th><th class="r">Inicial</th><th class="r">Vendas</th><th class="r">Esperado (dinheiro)</th><th class="r">Contado</th><th class="r">Diferença</th></tr>
+            </thead>
+            <tbody id="caixasBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- RELATÓRIOS -->
+      <section class="view" id="view-relatorios">
+        <div class="toolbar">
+          <h2>Relatórios</h2>
+          <label>De <input type="date" id="relDe"></label>
+          <label>Até <input type="date" id="relAte"></label>
+          <button class="btn" id="btnRelHoje">Hoje</button>
+          <button class="btn" id="btnRelMes">Este mês</button>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><span>Faturamento</span><strong id="kpiFat">R$ 0,00</strong></div>
+          <div class="kpi"><span>Vendas</span><strong id="kpiQtd">0</strong></div>
+          <div class="kpi"><span>Ticket médio</span><strong id="kpiTicket">R$ 0,00</strong></div>
+          <div class="kpi"><span>Lucro bruto estimado</span><strong id="kpiLucro">R$ 0,00</strong></div>
+        </div>
+        <div class="rel-grid">
+          <div class="card">
+            <h3>Por forma de pagamento</h3>
+            <table class="table"><tbody id="relPagamentos"></tbody></table>
+          </div>
+          <div class="card">
+            <h3>Produtos mais vendidos</h3>
+            <table class="table">
+              <thead><tr><th>Produto</th><th class="r">Qtd</th><th class="r">Total</th></tr></thead>
+              <tbody id="relTop"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Vendas do período</h3>
+          <table class="table">
+            <thead><tr><th>Nº</th><th>Data</th><th class="r">Itens</th><th>Pagamento</th><th class="r">Total</th><th>Situação</th><th></th></tr></thead>
+            <tbody id="relVendas"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>Estoque baixo</h3>
+          <table class="table">
+            <thead><tr><th>Código</th><th>Produto</th><th class="r">Estoque</th><th class="r">Mínimo</th></tr></thead>
+            <tbody id="relEstoque"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- CONFIG -->
+      <section class="view" id="view-config">
+        <div class="toolbar"><h2>Configurações</h2></div>
+        <div class="card">
+          <form id="formConfig" class="form-grid">
+            <div class="field"><label>Nome da loja</label><input name="nomeLoja" required></div>
+            <div class="field"><label>CNPJ</label><input name="cnpj"></div>
+            <div class="field span2"><label>Endereço</label><input name="endereco"></div>
+            <div class="field"><label>Telefone</label><input name="telefone"></div>
+            <div class="field"><label>Estoque mínimo padrão</label><input name="estoqueMinimo" type="number" min="0" step="1"></div>
+            <div class="field span2"><label>Mensagem no rodapé do cupom</label><input name="mensagemCupom"></div>
+            <div class="field span2"><label><input type="checkbox" name="bloquearSemEstoque"> Impedir venda de produto sem estoque</label></div>
+            <div class="span2"><button class="btn primary" type="submit">Salvar configurações</button></div>
+          </form>
+        </div>
+        <div class="card">
+          <h3>Backup dos dados</h3>
+          <p>Os dados ficam salvos neste navegador. Exporte um backup periodicamente.</p>
+          <div class="row-btns">
+            <button class="btn" id="btnExportar">Exportar backup (JSON)</button>
+            <label class="btn">Importar backup<input type="file" id="inputImportar" accept="application/json" hidden></label>
+            <button class="btn" id="btnExemplo">Carregar produtos de exemplo</button>
+            <button class="btn danger" id="btnLimpar">Apagar todos os dados</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL GENÉRICO -->
+  <div class="modal-bg hidden no-print" id="modalBg">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h3 id="modalTitulo"></h3>
+        <button class="btn icon" id="modalFechar" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal-body" id="modalCorpo"></div>
+    </div>
+  </div>
+
+  <div class="toast hidden no-print" id="toast"></div>
+
+  <!-- ÁREA DE IMPRESSÃO DO CUPOM -->
+  <div id="cupom" class="print-only"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
