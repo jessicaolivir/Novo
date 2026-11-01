@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <title>PDV</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Ícones (sprite SVG) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></symbol>
+      <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></symbol>
+      <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+      <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+      <symbol id="i-printer" viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></symbol>
+      <symbol id="i-card" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></symbol>
+      <symbol id="i-pix" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z"/><path d="m8 12 4-4 4 4-4 4z"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+      <symbol id="i-unlock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="i-barcode" viewBox="0 0 24 24"><path d="M3 5v14M6 5v14M10 5v14M12 5v14M15 5v14M18 5v14M21 5v14"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+      <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+      <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></symbol>
+      <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9 4.5 3h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v8h14v-8"/><path d="M10 21v-5h4v5"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="app">
+    <aside class="sidebar no-print">
+      <div class="brand">
+        <div class="brand-logo"><svg class="ic"><use href="#i-store"/></svg></div>
+        <div class="brand-text">
+          <strong id="brandName">Minha Loja</strong>
+          <small>Ponto de venda</small>
+        </div>
+      </div>
+      <nav>
+        <button class="nav-btn active" data-view="vendas"><svg class="ic"><use href="#i-cart"/></svg><span>Vendas</span><kbd>F1</kbd></button>
+        <button class="nav-btn" data-view="produtos"><svg class="ic"><use href="#i-box"/></svg><span>Produtos</span></button>
+        <button class="nav-btn" data-view="caixa"><svg class="ic"><use href="#i-cash"/></svg><span>Caixa</span></button>
+        <button class="nav-btn" data-view="relatorios"><svg class="ic"><use href="#i-chart"/></svg><span>Relatórios</span></button>
+        <button class="nav-btn" data-view="config"><svg class="ic"><use href="#i-sliders"/></svg><span>Configurações</span></button>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="caixa-status" id="caixaStatus"></div>
+        <button class="btn ghost theme-btn" id="btnTema" title="Alternar tema claro ou escuro"><svg class="ic"><use href="#i-moon"/></svg><span>Tema escuro</span></button>
+      </div>
+    </aside>
+
+    <main class="content no-print">
+      <header class="topbar">
+        <div>
+          <h1 id="tituloView">Vendas</h1>
+          <p id="subtituloView" class="muted"></p>
+        </div>
+        <div class="clock" id="relogio"></div>
+      </header>
+
+      <!-- VENDAS -->
+      <section class="view active" id="view-vendas">
+        <div class="pdv">
+          <div class="pdv-produtos">
+            <form id="formAddItem" class="search-bar" autocomplete="off">
+              <svg class="ic"><use href="#i-barcode"/></svg>
+              <input id="inputBusca" type="text" placeholder="Leia o código de barras ou digite o nome do produto   (F2)">
+              <input id="inputQtd" type="number" min="0.001" step="0.001" value="1" title="Quantidade" aria-label="Quantidade">
+              <button type="submit" class="btn primary"><svg class="ic"><use href="#i-plus"/></svg>Adicionar</button>
+              <ul id="sugestoes" class="sugestoes hidden"></ul>
+            </form>
+            <p class="hint muted">Dica: digite <b>3*código</b> para lançar 3 unidades de uma vez.</p>
+            <div class="chips" id="chipsCategorias"></div>
+            <div class="tiles" id="tilesProdutos"></div>
+          </div>
+
+          <aside class="pdv-cupom">
+            <div class="cupom-head">
+              <div>
+                <strong>Venda atual</strong>
+                <small class="muted" id="cupomInfo">0 itens</small>
+              </div>
+              <button class="btn ghost small" id="btnCancelarVenda" title="Cancelar venda (F8)"><svg class="ic"><use href="#i-trash"/></svg>Limpar <kbd>F8</kbd></button>
+            </div>
+            <div class="cupom-itens" id="carrinho"></div>
+            <div class="cupom-foot">
+              <div class="linha"><span>Subtotal</span><strong id="totSubtotal">R$ 0,00</strong></div>
+              <div class="linha">
+                <span>Desconto</span>
+                <div class="desc-input">
+                  <input id="inputDesconto" type="text" inputmode="decimal" placeholder="0,00">
+                  <div class="seg" id="tipoDescontoSeg">
+                    <button type="button" class="on" data-tipo="valor">R$</button>
+                    <button type="button" data-tipo="perc">%</button>
+                  </div>
+                </div>
+              </div>
+              <div class="linha desconto-aplicado hidden" id="linhaDesconto"><span>Desconto aplicado</span><strong id="totDesconto"></strong></div>
+              <div class="total-geral">
+                <span>Total a pagar</span>
+                <strong id="totTotal">R$ 0,00</strong>
+              </div>
+              <button class="btn success xl" id="btnFinalizar"><svg class="ic"><use href="#i-check"/></svg>Finalizar venda <kbd>F4</kbd></button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- PRODUTOS -->
+      <section class="view" id="view-produtos">
+        <div class="toolbar">
+          <div class="search-sm"><svg class="ic"><use href="#i-search"/></svg><input id="buscaProduto" type="search" placeholder="Buscar por nome, código ou categoria"></div>
+          <button class="btn primary" id="btnNovoProduto"><svg class="ic"><use href="#i-plus"/></svg>Novo produto</button>
+        </div>
+        <div class="card flush">
+          <table class="table">
+            <thead>
+              <tr><th>Produto</th><th>Código</th><th>Categoria</th><th class="r">Custo</th><th class="r">Preço</th><th class="r">Margem</th><th class="r">Estoque</th><th></th></tr>
+            </thead>
+            <tbody id="produtosBody"></tbody>
+          </table>
+          <div class="empty hidden" id="produtosVazio">
+            <svg class="ic xl"><use href="#i-box"/></svg>
+            <p>Nenhum produto encontrado.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CAIXA -->
+      <section class="view" id="view-caixa">
+        <div id="caixaPainel"></div>
+        <div class="card flush">
+          <div class="card-title">Histórico de caixas</div>
+          <table class="table">
+            <thead>
+              <tr><th>Nº</th><th>Abertura</th><th>Fechamento</th><th class="r">Fundo inicial</th><th class="r">Vendas</th><th class="r">Dinheiro esperado</th><th class="r">Contado</th><th class="r">Diferença</th></tr>
+            </thead>
+            <tbody id="caixasBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- RELATÓRIOS -->
+      <section class="view" id="view-relatorios">
+        <div class="toolbar">
+          <div class="seg big" id="periodoSeg">
+            <button type="button" data-p="hoje" class="on">Hoje</button>
+            <button type="button" data-p="7">7 dias</button>
+            <button type="button" data-p="30">30 dias</button>
+            <button type="button" data-p="mes">Este mês</button>
+          </div>
+          <label class="date">De <input type="date" id="relDe"></label>
+          <label class="date">Até <input type="date" id="relAte"></label>
+        </div>
+        <div class="kpis">
+          <div class="kpi k1"><span>Faturamento</span><strong id="kpiFat">R$ 0,00</strong></div>
+          <div class="kpi k2"><span>Vendas realizadas</span><strong id="kpiQtd">0</strong></div>
+          <div class="kpi k3"><span>Ticket médio</span><strong id="kpiTicket">R$ 0,00</strong></div>
+          <div class="kpi k4"><span>Lucro bruto estimado</span><strong id="kpiLucro">R$ 0,00</strong></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Faturamento por dia</div>
+          <div id="grafico" class="grafico"></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Por forma de pagamento</div>
+            <div id="relPagamentos"></div>
+          </div>
+          <div class="card flush">
+            <div class="card-title">Produtos mais vendidos</div>
+            <table class="table">
+              <thead><tr><th>Produto</th><th class="r">Qtd</th><th class="r">Total</th></tr></thead>
+              <tbody id="relTop"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card flush">
+          <div class="card-title">Vendas do período</div>
+          <table class="table">
+            <thead><tr><th>Nº</th><th>Data</th><th class="r">Itens</th><th>Pagamento</th><th class="r">Total</th><th>Situação</th><th></th></tr></thead>
+            <tbody id="relVendas"></tbody>
+          </table>
+        </div>
+        <div class="card flush">
+          <div class="card-title">Estoque baixo</div>
+          <table class="table">
+            <thead><tr><th>Código</th><th>Produto</th><th class="r">Estoque</th><th class="r">Mínimo</th></tr></thead>
+            <tbody id="relEstoque"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- CONFIG -->
+      <section class="view" id="view-config">
+        <div class="grid-2 top">
+          <div class="card">
+            <div class="card-title">Dados da loja</div>
+            <form id="formConfig" class="form-grid">
+              <div class="field span2"><label>Nome da loja</label><input name="nomeLoja" required></div>
+              <div class="field"><label>CNPJ</label><input name="cnpj"></div>
+              <div class="field"><label>Telefone</label><input name="telefone"></div>
+              <div class="field span2"><label>Endereço</label><input name="endereco"></div>
+              <div class="field span2"><label>Mensagem no rodapé do cupom</label><input name="mensagemCupom"></div>
+              <div class="field"><label>Estoque mínimo padrão</label><input name="estoqueMinimo" type="number" min="0" step="1"></div>
+              <div class="field"><label>&nbsp;</label><label class="check"><input type="checkbox" name="bloquearSemEstoque"> Impedir venda sem estoque</label></div>
+              <div class="span2"><button class="btn primary" type="submit"><svg class="ic"><use href="#i-check"/></svg>Salvar</button></div>
+            </form>
+          </div>
+
+          <div class="card" id="cardGmail">
+            <div class="card-title"><svg class="ic"><use href="#i-mail"/></svg>Backup pelo Gmail</div>
+            <div id="gmailIndisponivel" class="aviso hidden">
+              O backup automático pelo Gmail funciona apenas no programa instalado no computador. Neste modo navegador, use a exportação manual abaixo.
+            </div>
+            <form id="formGmail" class="form-grid hidden" autocomplete="off">
+              <div class="field span2"><label>Gmail da loja</label><input name="email" type="email" placeholder="loja@gmail.com" required></div>
+              <div class="field span2">
+                <label>Senha de app do Google <a href="#" id="linkAjudaSenha">Como criar?</a></label>
+                <input name="senha" type="password" placeholder="xxxx xxxx xxxx xxxx">
+                <small class="muted" id="gmailSenhaInfo">Não use a senha normal do Gmail. Use uma senha de app de 16 letras.</small>
+              </div>
+              <div class="field span2"><label>Enviar backup para (opcional)</label><input name="destino" type="email" placeholder="Se vazio, envia para o próprio Gmail da loja"></div>
+              <label class="check span2"><input type="checkbox" name="aoFechar"> Enviar backup sempre que o caixa for fechado</label>
+              <label class="check span2"><input type="checkbox" name="diario"> Enviar backup automaticamente uma vez por dia</label>
+              <div class="span2 row-btns">
+                <button class="btn primary" type="submit"><svg class="ic"><use href="#i-check"/></svg>Salvar e enviar teste</button>
+                <button class="btn" type="button" id="btnEnviarAgora"><svg class="ic"><use href="#i-mail"/></svg>Enviar backup agora</button>
+                <button class="btn ghost danger-text" type="button" id="btnRemoverGmail">Desconectar</button>
+              </div>
+              <div class="span2 status-backup" id="statusBackup"></div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><svg class="ic"><use href="#i-shield"/></svg>Backup manual e dados</div>
+          <p class="muted" id="infoBackupLocal">Os dados ficam salvos neste computador. Exporte um backup periodicamente.</p>
+          <div class="row-btns">
+            <button class="btn" id="btnExportar"><svg class="ic"><use href="#i-download"/></svg>Exportar backup</button>
+            <label class="btn"><svg class="ic"><use href="#i-upload"/></svg>Restaurar backup<input type="file" id="inputImportar" accept="application/json,.json" hidden></label>
+            <button class="btn hidden" id="btnAbrirPasta"><svg class="ic"><use href="#i-folder"/></svg>Abrir pasta de backups</button>
+            <button class="btn" id="btnExemplo"><svg class="ic"><use href="#i-box"/></svg>Carregar produtos de exemplo</button>
+            <button class="btn ghost danger-text" id="btnLimpar"><svg class="ic"><use href="#i-trash"/></svg>Apagar todos os dados</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-bg hidden no-print" id="modalBg">
+    <div class="modal" role="dialog" aria-modal="true" id="modalBox">
+      <div class="modal-head">
+        <h3 id="modalTitulo"></h3>
+        <button class="btn icon" id="modalFechar" aria-label="Fechar"><svg class="ic"><use href="#i-x"/></svg></button>
+      </div>
+      <div class="modal-body" id="modalCorpo"></div>
+    </div>
+  </div>
+
+  <div class="toasts no-print" id="toasts"></div>
+
+  <!-- CUPOM PARA IMPRESSÃO -->
+  <div id="cupom" class="print-only"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
